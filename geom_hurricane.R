@@ -37,11 +37,27 @@ load_hdata <- function(filename) {
 #' Tidy hurricane data that conforms to assignment criteria
 #' \donotrun{tidy_hdata} takes the raw hurricane data and cleans it to a more usable format for the assignment
 #' 
-#' @importFrom stringr str_c
+#' @importFrom stringr str_c str_to_title
 #' 
 #' @export
 tidy_hdata <- function(data) {
-  data %>% mutate_(storm_id = ~storm_name)
+  data %>% 
+    # Configure the storm_id and date 
+    dplyr::mutate_(storm_id = ~stringr::str_c(stringr::str_to_title(storm_name), year, sep = '-'),
+                   date = ~stringr::str_c(year, '-', month, '-', day, ' ', hour, ':', '00', ':', '00')
+    ) %>% 
+    # Select only the relevant columns
+    dplyr::select_(.dots = c('storm_id', 'date', 'longitude', 'latitude', 
+                            'radius_34_ne', 'radius_34_se', 'radius_34_sw', 'radius_34_nw',
+                            'radius_50_ne', 'radius_50_se', 'radius_50_sw', 'radius_50_nw',
+                            'radius_64_ne', 'radius_64_se', 'radius_64_sw', 'radius_64_nw')
+    ) %>%
+    
+    #There is a better way to do this part, this is the wide to long transfmration
+    tidyr::gather(variable, value, -storm_id, -date,-latitude, -longitude, -storm_id, -date) %>% mutate_(wind_speed = ~str_extract(variable, "(34|50|64)"),
+              variable = ~str_extract(variable, "(ne|nw|se|sw)")) %>% tidyr::spread(variable, value)
+  
+  
 }
 
 

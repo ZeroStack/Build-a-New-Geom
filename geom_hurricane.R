@@ -1,12 +1,15 @@
 #' Load hurricane data
 #' 
-#' 
-#' 
-#'@importFrom readr read.fwf
+#' @importFrom readr read.fwf
 #'
-#'@param filename the file hurricane data location
+#' @param filename a character vector of filename of hurricane data file to read
 #' 
-#'@export
+#' @example /donotrun{load_data()}
+
+#' @export
+#' \dontrun{
+#'   load_hdata("data/ebtrk_atlc_1988_2015.txt")
+#' }
 #'
 load_hdata <- function(filename) {
   
@@ -31,3 +34,18 @@ load_hdata <- function(filename) {
   
 }
 
+#' Tidy hurricane data that conforms to assignment criteria
+#' \donotrun{tidy_hdata} takes the raw hurricane data and cleans it to a more usable format for the assignment
+#' 
+#' @importFrom stringr str_c
+#' 
+#' @export
+tidy_hdata <- function(data) {
+  data %>% mutate_(storm_id = ~storm_name)
+}
+
+
+
+data <- load_hdata('data/ebtrk_atlc_1988_2015.txt')
+
+t.data <- tidy_hdata(data)

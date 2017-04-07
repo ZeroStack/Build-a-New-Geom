@@ -79,15 +79,29 @@ filter_hdata <- function(data, hurricane, observation) {
   
 }
 
+# List relevant packages
+packages <- c('readr', 'dplyr', 'stringr', 'tidyr', 'ggmap')
 
-packages <- c('readr', 'dplyr', 'stringr')
-
+# Load packages
 lapply(packages, require, character.only = TRUE)
 
 
-
+# Read data into R, tidy it and filter it for Ike-2008
 data <- load_hdata('data/ebtrk_atlc_1988_2015.txt') %>% 
   tidy_hdata() %>% 
   filter_hdata(hurricane = 'Ike-2008', observation = '2008-09-12 00:00:00')
 
+
+
+
+map <- get_map("Louisiana", zoom = 6, maptype = "toner-background") %>%
+  ggmap(extent = "device") +
+  geom_hurricane(data = storm_observation,
+                 aes(x = longitude, y = latitude, 
+                     r_ne = ne, r_se = se, r_nw = nw, r_sw = sw,
+                     fill = wind_speed, color = wind_speed)) + 
+  scale_color_manual(name = "Wind speed (kts)", 
+                     values = c("red", "orange", "yellow")) + 
+  scale_fill_manual(name = "Wind speed (kts)", 
+                    values = c("red", "orange", "yellow"))
 

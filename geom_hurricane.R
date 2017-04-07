@@ -55,13 +55,28 @@ tidy_hdata <- function(data) {
     
     #There is a better way to do this part, this is the wide to long transfmration
     tidyr::gather(variable, value, -storm_id, -date,-latitude, -longitude, -storm_id, -date) %>% mutate_(wind_speed = ~str_extract(variable, "(34|50|64)"),
-              variable = ~str_extract(variable, "(ne|nw|se|sw)")) %>% tidyr::spread(variable, value)
+              variable = ~str_extract(variable, "(ne|nw|se|sw)")) %>% tidyr::spread(variable, value) %>% select_(.dots = c('storm_id', 'date', 'latitude', 'longitude', 'wind_speed', 'ne', 'nw', 'se', 'sw'))
   
   
 }
 
+#' Filter the data by hurricane and time
+#' 
+#' @export
+filter_hdata <- function(data, hurricane, observation) {
+  data <- filter_(data, ~storm_id == hurricane & date == observation)
+  
+}
 
 
-data <- load_hdata('data/ebtrk_atlc_1988_2015.txt')
+packages <- c('readr', 'dplyr', 'stringr')
 
-t.data <- tidy_hdata(data)
+lapply(packages, require, character.only = TRUE)
+
+
+
+data <- load_hdata('data/ebtrk_atlc_1988_2015.txt') %>% 
+  tidy_hdata() %>% 
+  filter_hdata(hurricane = 'Ike-2008', observation = '2008-09-12 00:00:00')
+
+

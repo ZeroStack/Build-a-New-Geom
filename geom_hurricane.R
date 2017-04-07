@@ -4,12 +4,14 @@
 #'
 #' @param filename a character vector of filename of hurricane data file to read
 #' 
-#' @example /donotrun{load_data()}
-
-#' @export
+#' @example 
 #' \dontrun{
 #'   load_hdata("data/ebtrk_atlc_1988_2015.txt")
 #' }
+
+#' @export
+#' 
+#'
 #'
 load_hdata <- function(filename) {
   
@@ -38,7 +40,10 @@ load_hdata <- function(filename) {
 #' \donotrun{tidy_hdata} takes the raw hurricane data and cleans it to a more usable format for the assignment
 #' 
 #' @importFrom stringr str_c str_to_title
+#' @importFrom dplyr mutate_ select_
+#' @importFrom tidyr gather spread
 #' 
+#' @param data data to tidy
 #' @export
 tidy_hdata <- function(data) {
   data %>% 
@@ -61,6 +66,12 @@ tidy_hdata <- function(data) {
 }
 
 #' Filter the data by hurricane and time
+#' 
+#' @importFrom dplyr filter_
+#' 
+#' @param data input data to filter
+#' @hurricane id to filter the data by
+#' @observation time to filter the data by
 #' 
 #' @export
 filter_hdata <- function(data, hurricane, observation) {

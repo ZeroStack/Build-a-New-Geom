@@ -93,18 +93,30 @@ data <- load_hdata('data/ebtrk_atlc_1988_2015.txt') %>%
 
 
 geom_hurricane <- ggproto("geom_hurricane", Geom,
-                          required_aes = c("x", "y"),
-                          default_aes = aes(shape = 19),
+                          required_aes = c("x", "y",
+                                           "r_ne", "r_se", "r_nw", "r_sw",
+                                           "fill", "color"),
+                          default_aes = aes(),
+                          draw_key = function() {
+                            
+                          },
+                          draw_panel(data, panel_scales, coord) {
+                            
+                          }
+
                           )
 
 map <- get_map("Louisiana", zoom = 6, maptype = "toner-background") %>%
   ggmap(extent = "device") +
-  geom_hurricane(data = storm_observation,
-                 aes(x = longitude, y = latitude, 
-                     r_ne = ne, r_se = se, r_nw = nw, r_sw = sw,
-                     fill = wind_speed, color = wind_speed)) + 
-  scale_color_manual(name = "Wind speed (kts)", 
-                     values = c("red", "orange", "yellow")) + 
-  scale_fill_manual(name = "Wind speed (kts)", 
-                    values = c("red", "orange", "yellow"))
+  geom_point(data = data, aes(x = longitude, y = latitude),
+               size = 20, shape = 1,  color = "#ff0000")
 
+  # geom_hurricane(data = storm_observation,
+  #                aes(x = longitude, y = latitude, 
+  #                    r_ne = ne, r_se = se, r_nw = nw, r_sw = sw,
+  #                    fill = wind_speed, color = wind_speed)) + 
+  # scale_color_manual(name = "Wind speed (kts)", 
+  #                    values = c("red", "orange", "yellow")) + 
+  # scale_fill_manual(name = "Wind speed (kts)", 
+  #                   values = c("red", "orange", "yellow"))
+  # 

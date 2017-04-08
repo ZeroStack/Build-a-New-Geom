@@ -96,15 +96,39 @@ geom_hurricane <- ggproto("geom_hurricane", Geom,
                           required_aes = c("x", "y",
                                            "r_ne", "r_se", "r_nw", "r_sw",
                                            "fill", "color"),
-                          default_aes = aes(),
-                          draw_key = function() {
+                          default_aes = aes(shape = 1),
+                          draw_key = draw_key_point,
+                          draw_panel = function(data, panel_scales, coord) {
+                            ## Transform the data first
+                            coords <- coord$transform(data, panel_scales)
                             
-                          },
-                          draw_panel(data, panel_scales, coord) {
+                            ## Let's print out the structure of the 'coords' object
+                            
+                            str(coords)
+                            
+                            ## Construct a grid grob
+                            pointsGrob(
+                              x = coords$x,
+                              y = coords$y,
+                              pch = coords$shape
+                            )
                             
                           }
 
-                          )
+)
+
+geom_mypoint <- function(mapping = NULL, data = NULL, stat = 'identity',
+                         position = 'identity', na.rm = FALSE,
+                         show.legend = NA, inherit.aes = TRUE, ...) {
+  ggplot2::layer(
+    geom = geom_hurricane, mapping = mapping,
+    data = data, stat = stat, position = position, 
+    show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, ...)
+    
+  )
+}
+
 
 map <- get_map("Louisiana", zoom = 6, maptype = "toner-background") %>%
   ggmap(extent = "device") +

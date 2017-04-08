@@ -80,7 +80,7 @@ filter_hdata <- function(data, hurricane, observation) {
 }
 
 # List relevant packages
-packages <- c('readr', 'dplyr', 'stringr', 'tidyr', 'ggmap')
+packages <- c('readr', 'dplyr', 'stringr', 'tidyr', 'ggmap', 'geosphere')
 
 # Load packages
 lapply(packages, require, character.only = TRUE)
@@ -92,7 +92,10 @@ data <- load_hdata('data/ebtrk_atlc_1988_2015.txt') %>%
   filter_hdata(hurricane = 'Ike-2008', observation = '2008-09-12 00:00:00')
 
 
-
+geom_hurricane <- ggproto("geom_hurricane", Geom,
+                          required_aes = c("x", "y"),
+                          default_aes = aes(shape = 19),
+                          )
 
 map <- get_map("Louisiana", zoom = 6, maptype = "toner-background") %>%
   ggmap(extent = "device") +

@@ -93,9 +93,11 @@ data <- load_hdata('data/ebtrk_atlc_1988_2015.txt') %>%
 
 
 geom_hurricane <- ggproto("geom_hurricane", Geom,
-                          required_aes = c("x", "y",
-                                           "r_ne", "r_se", "r_nw", "r_sw",
-                                           "fill", "color"),
+                          required_aes = c("x", "y"
+                                           #,
+                                           #"r_ne", "r_se", "r_nw", "r_sw",
+                                           #"fill", "color"
+                          ),
                           default_aes = aes(shape = 1),
                           draw_key = draw_key_point,
                           draw_panel = function(data, panel_scales, coord) {
@@ -103,14 +105,14 @@ geom_hurricane <- ggproto("geom_hurricane", Geom,
                             coords <- coord$transform(data, panel_scales)
                             
                             ## Let's print out the structure of the 'coords' object
-                            
                             str(coords)
                             
                             ## Construct a grid grob
-                            pointsGrob(
+                            circleGrob(
                               x = coords$x,
-                              y = coords$y,
-                              pch = coords$shape
+                              y = coords$y
+                              #,
+                              #pch = coords$shape
                             )
                             
                           }
@@ -128,6 +130,8 @@ geom_mypoint <- function(mapping = NULL, data = NULL, stat = 'identity',
     
   )
 }
+
+ggplot(data = data, aes(x = longitude, y = latitude)) + geom_mypoint()
 
 
 map <- get_map("Louisiana", zoom = 6, maptype = "toner-background") %>%

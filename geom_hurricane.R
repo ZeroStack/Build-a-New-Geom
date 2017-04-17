@@ -109,8 +109,18 @@ geom_hurricane <- function(mapping = NULL, data = NULL, stat = 'identity',
 #' 
 #' @importFrom ggplot2 ggproto
 #' @importFrom base data.frame as.character
-#' @importFrom dplyr bind_rows rename
-#' @importFrom grid polygonGrob
+#' @importFrom dplyr bind_rows rename_ mutate_
+#' @importFrom grid polygonGrob gpar 
+#' 
+#' @param required_aes required aesthetic arguments for the geom_hurricane supplied in character vector
+#' @param default_aes default values for aesthetic arguments
+#' @param draw_key the function to draw the legend with the associated geom
+#' @param draw_group where the bulk of this geom is constructed
+#' 
+#' @examples
+#' \dontrun{
+#'   geom_hurricane(data = storm_observation, aes(x = longitude, y = latitude, r_ne = ne, r_se = se, r_nw = nw, r_sw = sw, fill = wind_speed, color = wind_speed)
+#' }
 
 geom_hurricane_proto <- ggplot2::ggproto("geom_hurricane_proto", Geom,
                                 required_aes = c("x", "y",
@@ -228,12 +238,7 @@ storm_observation <- load_hdata('data/ebtrk_atlc_1988_2015.txt') %>%
 
 
 
-
-
-
-
-
-
+# Create map and add hurricane Ike storm observation
 map_ike <- get_map("Louisiana", zoom = 6, maptype = "toner-background") %>%
   ggmap(extent = "device") +
   geom_hurricane(data = storm_observation,

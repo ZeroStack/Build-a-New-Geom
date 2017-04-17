@@ -206,13 +206,13 @@ geom_hurricane_proto <- ggplot2::ggproto("geom_hurricane_proto", Geom,
                                   
                                   
                                   ## transform data points
-                                  coords_DP <- coord$transform(df_points, panel_scales)
+                                  coords_df <- coord$transform(df_points, panel_scales)
                                   
                                   ## Construct grid polygon
                                   grid::polygonGrob(
-                                    x= coords_DP$x,
-                                    y = coords_DP$y,
-                                    gp = grid::gpar(col = coords_DP$colour, fill = coords_DP$fill, alpha = coords_DP$alpha)
+                                    x= coords_df$x,
+                                    y = coords_df$y,
+                                    gp = grid::gpar(col = coords_df$colour, fill = coords_df$fill, alpha = coords_df$alpha)
                                   )
                                   
                                 }

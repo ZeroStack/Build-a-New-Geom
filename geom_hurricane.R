@@ -121,7 +121,8 @@ geom_hurricane <- function(mapping = NULL, data = NULL, stat = 'identity',
 #' \dontrun{
 #'   geom_hurricane(data = storm_observation, aes(x = longitude, y = latitude, r_ne = ne, r_se = se, r_nw = nw, r_sw = sw, fill = wind_speed, color = wind_speed)
 #' }
-
+#' 
+#' @export
 geom_hurricane_proto <- ggplot2::ggproto("geom_hurricane_proto", Geom,
                                 required_aes = c("x", "y",
                                                  "r_ne", "r_se", "r_nw", "r_sw"
@@ -233,8 +234,6 @@ lapply(packages, require, character.only = TRUE)
 storm_observation <- load_hdata('data/ebtrk_atlc_1988_2015.txt') %>% 
   tidy_hdata() %>% 
   filter_hdata(hurricane = 'Ike-2008', observation = '2008-09-13 12:00:00')
-
-
 
 
 
